@@ -45,12 +45,14 @@ Route::prefix('admin')->middleware('role:Admin')->group(function () {
     Route::put('/service/{id}', [ServiceController::class, 'update']);
     Route::delete('/service/{id}', [ServiceController::class, 'destroy']);
 
+    /*
     Route::get('/voucher', [VoucherController::class, 'index']);
     Route::get('/voucher/create', [VoucherController::class, 'create']);
     Route::post('/voucher', [VoucherController::class, 'store']);
     Route::get('/voucher/{id}/edit', [VoucherController::class, 'edit']);
     Route::put('/voucher/{id}', [VoucherController::class, 'update']);
     Route::delete('/voucher/{id}', [VoucherController::class, 'destroy']);
+    */
 });
 
 // Route yang BISA diakses Admin & Operator secara bersamaan

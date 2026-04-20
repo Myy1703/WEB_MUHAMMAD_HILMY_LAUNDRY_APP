@@ -18,6 +18,7 @@
                     <th>Nama Customer</th>
                     <th>No Telepon</th>
                     <th>Alamat</th>
+                    {{-- <th class="text-center">Status</th> --}}
                     <th width="15%" class="text-center">Aksi</th>
                 </tr>
             </thead>
@@ -28,6 +29,15 @@
                     <td>{{ $customer->customer_name }}</td>
                     <td>{{ $customer->phone }}</td>
                     <td>{{ $customer->address }}</td>
+                    {{-- 
+                    <td class="text-center">
+                        @if($customer->is_member)
+                            <span class="badge bg-success"><i class="bi bi-star-fill me-1"></i>Member</span>
+                        @else
+                            <span class="badge bg-secondary">Non-Member</span>
+                        @endif
+                    </td>
+                    --}}
                     <td class="text-center">
                         <a href="/admin/customer/{{ $customer->id }}/edit"
                            class="btn btn-sm btn-warning">
@@ -46,7 +56,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center text-muted">
+                    <td colspan="6" class="text-center text-muted">
                         Belum ada data customer
                     </td>
                 </tr>

@@ -13,6 +13,13 @@ class User extends Authenticatable
     protected $fillable = ['role_id', 'name', 'email', 'password'];
     protected $hidden = ['password'];
 
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
+    }
+
     // Relasi: user punya satu role
     public function role()
     {

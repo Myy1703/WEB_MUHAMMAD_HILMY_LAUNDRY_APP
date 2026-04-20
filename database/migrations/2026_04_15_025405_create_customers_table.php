@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('customer_name', 50);
             $table->string('phone', 13);
             $table->text('address');
-            $table->boolean('is_member')->default(false);
+            /* $table->boolean('is_member')->default(false); */
             $table->timestamps();
             $table->softDeletes();
         });

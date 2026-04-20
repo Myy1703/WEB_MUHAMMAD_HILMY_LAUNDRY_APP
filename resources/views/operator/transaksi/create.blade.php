@@ -20,56 +20,89 @@
             <div class="card-header bg-primary text-white fw-bold">
                 <i class="bi bi-person-check me-2"></i>Informasi Customer
             </div>
-            <div class="card-body">
+            <div class="card-body" style="cursor: default;">
 
+                {{-- KODE DIMATIKAN
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Tipe Customer</label>
-                    <div class="p-2 border rounded bg-light">
+                    <label class="form-label fw-bold" style="cursor: default; user-select: none;">Tipe Customer</label>
+                    <div class="p-2 border rounded bg-light" style="cursor: default;">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="tipe_customer" id="tipe_terdaftar" value="terdaftar" checked onchange="toggleTipeCustomer()">
-                            <label class="form-check-label fw-bold text-primary" for="tipe_terdaftar">
-                                <i class="bi bi-card-list"></i> Customer Terdaftar / Member
+                            <label class="form-check-label fw-bold text-success" for="tipe_terdaftar">
+                                <i class="bi bi-star-fill"></i> Member
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="tipe_customer" id="tipe_baru" value="baru" onchange="toggleTipeCustomer()">
                             <label class="form-check-label fw-bold text-secondary" for="tipe_baru">
-                                <i class="bi bi-person-plus"></i> Non-Member (Baru)
+                                <i class="bi bi-person"></i> Non-Member
                             </label>
                         </div>
                     </div>
                 </div>
+                --}}
 
+                <!-- ===== SINTAKS BARU PENGGANTI MEMBER/NON-MEMBER ====== -->
+                <!-- (Bagian "Pilihan Customer" yang tadinya saya tambahkan telah dihapus, menyesuaikan intruksi untuk fokus ke inputan murni). -->
+                <!-- ======================================================= -->
+
+                <!-- KODE LAMA PILIHAN CUSTOMER -->
+                <!-- (Bisa dibongkar comment-nya jika mau menggunakan dropdown customer murni lagi).
                 <div id="div_customer_terdaftar" class="mb-3">
                     <label class="form-label fw-bold">Pilih Customer</label>
                     <select id="customer_select" name="id_customer" class="form-select" onchange="hitungTotal()">
                         <option value="">-- Pilih Customer --</option>
                         @foreach($customers as $customer)
-                            <option value="{{ $customer->id }}" data-member="{{ $customer->is_member ? '1' : '0' }}">
-                                {{ $customer->customer_name }} ({{ $customer->phone }}) 
-                                {{ $customer->is_member ? '[MEMBER]' : '' }}
+                            <option value="{{ $customer->id }}">
+                                {{ $customer->customer_name }} ({{ $customer->phone }})
                             </option>
                         @endforeach
                     </select>
-                    <div class="mt-2">
-                        <span id="badge-member" class="badge bg-success d-none"><i class="bi bi-star-fill"></i> Member Pribadi</span>
-                    </div>
                 </div>
+                -->
 
-                <div id="div_customer_baru" class="d-none mb-3 p-3 border rounded">
-                    <div class="mb-2">
-                        <label class="form-label fw-bold small mb-1">Nama Lengkap</label>
-                        <input type="text" name="customer_name" id="input_cust_name" class="form-control form-control-sm" placeholder="Nama Non-Member">
+                {{-- KODE DIMATIKAN
+                <div id="div_customer_baru" class="d-none mb-3 p-3 border rounded bg-light">
+                    <div class="mb-1">
+                        <span class="badge bg-secondary mb-2"><i class="bi bi-person me-1"></i>Data Customer Non-Member</span>
                     </div>
                     <div class="mb-2">
-                        <label class="form-label fw-bold small mb-1">No HP / WA</label>
-                        <input type="text" name="phone" id="input_cust_phone" class="form-control form-control-sm" placeholder="08xxxxxxxx">
+                        <label class="form-label fw-bold small mb-1">Nama Lengkap <span class="text-danger">*</span></label>
+                        <input type="text" name="customer_name" id="input_cust_name" class="form-control form-control-sm" placeholder="Masukkan nama lengkap">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-bold small mb-1">No HP / WA <span class="text-danger">*</span></label>
+                        <input type="text" name="phone" id="input_cust_phone" class="form-control form-control-sm" placeholder="08xxxxxxxxxx">
                     </div>
                     <div>
-                        <label class="form-label fw-bold small mb-1">Alamat</label>
-                        <textarea name="address" id="input_cust_address" class="form-control form-control-sm" rows="2" placeholder="Alamat lengkap"></textarea>
+                        <label class="form-label fw-bold small mb-1">Alamat <span class="text-danger">*</span></label>
+                        <textarea name="address" id="input_cust_address" class="form-control form-control-sm" rows="2" placeholder="Masukkan alamat lengkap"></textarea>
                     </div>
                 </div>
+                --}}
+
+                <!-- ===== SINTAKS BARU FORM CUSTOMER BARU ====== -->
+                <!-- (Blok formulir pendaftaran pelanggan baru dengan status standar. Ditampilkan permanen sebagai inputan pengganti). Hapus/comment form ini dan hidupkan blok yang diatas jika ingin kembali ke sistem dropdown lama). -->
+                <div id="div_customer_baru" class="mb-3 p-3 border rounded bg-light">
+                    <div class="mb-1">
+                        <span class="badge bg-secondary mb-2"><i class="bi bi-person-plus me-1"></i>Data Customer Baru Transaksi</span>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-bold small mb-1">Nama Lengkap <span class="text-danger">*</span></label>
+                        <input type="text" name="customer_name" id="input_cust_name" class="form-control form-control-sm" placeholder="Masukkan nama lengkap" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-bold small mb-1">No HP / WA <span class="text-danger">*</span></label>
+                        <input type="text" name="phone" id="input_cust_phone" class="form-control form-control-sm" placeholder="08xxxxxxxxxx" required>
+                    </div>
+                    <div>
+                        <label class="form-label fw-bold small mb-1">Alamat <span class="text-danger">*</span></label>
+                        <textarea name="address" id="input_cust_address" class="form-control form-control-sm" rows="2" placeholder="Masukkan alamat lengkap" required></textarea>
+                    </div>
+                </div>
+                <!-- ============================================== -->
+
+
 
                 <div class="mb-3">
                     <label class="form-label fw-bold">Tanggal Masuk</label>
@@ -83,6 +116,7 @@
                         value="{{ date('Y-m-d', strtotime('+2 days')) }}" required>
                 </div>
 
+                {{-- 
                 <div class="mb-3">
                     <label class="form-label fw-bold">Kode Voucher</label>
                     <div class="input-group">
@@ -92,6 +126,7 @@
                     <small id="voucher_msg" class="d-block mt-1 fw-bold"></small>
                     <input type="hidden" id="voucher_verified" name="voucher_code" value="">
                 </div>
+                --}}
 
             </div>
         </div>
@@ -158,9 +193,11 @@
                 {{-- Total --}}
                 <div class="text-end mt-2">
                     <h6 class="text-muted">Subtotal: <strong id="label-subtotal">Rp 0</strong></h6>
+                    {{-- 
                     <h6 class="text-success d-none" id="row-member-discount">Diskon Member ({{ env('DISKON_MEMBER', 5) }}%): <strong id="label-member-discount">Rp 0</strong></h6>
                     <h6 class="text-success d-none" id="row-voucher-discount">Diskon Voucher (<span id="txt-voucher-pct">0</span>%): <strong id="label-voucher-discount">Rp 0</strong></h6>
                     <h6 class="text-muted">Pajak ({{ env('PAJAK_LAUNDRY', 10) }}%): <strong class="text-danger" id="label-tax">Rp 0</strong></h6>
+                    --}}
                     <hr>
                     <h5>Total Akhir: <strong class="text-primary" id="label-total">Rp 0</strong></h5>
                 </div>
@@ -263,13 +300,14 @@ function hitungSubtotal(el) {
     hitungTotal();
 }
 
-const DISKON_MEMBER_PCT = {{ env('DISKON_MEMBER', 5) }};
-const DISKON_VOUCHER_MEMBER_PCT = {{ env('DISKON_VOUCHER_MEMBER', 15) }};
-const DISKON_VOUCHER_NON_MEMBER_PCT = {{ env('DISKON_VOUCHER_NON_MEMBER', 10) }};
-const PAJAK_PCT = {{ env('PAJAK_LAUNDRY', 10) }};
+const DISKON_MEMBER_PCT = 0; // {{ env('DISKON_MEMBER', 5) }};
+// const DISKON_VOUCHER_MEMBER_PCT = {{ env('DISKON_VOUCHER_MEMBER', 15) }};
+// const DISKON_VOUCHER_NON_MEMBER_PCT = {{ env('DISKON_VOUCHER_NON_MEMBER', 10) }};
+// const PAJAK_PCT = {{ env('PAJAK_LAUNDRY', 10) }};
 
 let isVoucherValid = false;
 
+/*
 // Fungsi cek status member dari dropdown (hanya jika terdaftar)
 function isCustomerMember() {
     const tipe = document.querySelector('input[name="tipe_customer"]:checked').value;
@@ -311,7 +349,9 @@ function toggleTipeCustomer() {
 document.addEventListener("DOMContentLoaded", function() {
     toggleTipeCustomer();
 });
+*/
 
+/*
 function cekVoucher() {
     const code = document.getElementById('voucher_input').value.trim();
     if (!code) {
@@ -344,6 +384,7 @@ function cekVoucher() {
         }
     });
 }
+*/
 
 // Fungsi hitung total semua baris
 function hitungTotal() {
@@ -357,20 +398,22 @@ function hitungTotal() {
     });
 
     // 2. Cek Member
-    const isMember = isCustomerMember();
-    document.getElementById('badge-member').className = isMember ? 'badge bg-success' : 'd-none';
+    // const isMember = isCustomerMember();
+    // document.getElementById('badge-member').className = isMember ? 'badge bg-success' : 'd-none';
 
     // 3. Diskon Member
     let diskonMemberNominal = 0;
+    /*
     if (isMember) {
         diskonMemberNominal = (subtotal * DISKON_MEMBER_PCT) / 100;
         document.getElementById('row-member-discount').className = 'text-success';
     } else {
         document.getElementById('row-member-discount').className = 'd-none';
     }
+    */
     
     // 4. Diskon Voucher
-    let diskonVoucherNominal = 0;
+    /* let diskonVoucherNominal = 0;
     let voucherPct = 0;
     if (isVoucherValid) {
         voucherPct = isMember ? DISKON_VOUCHER_MEMBER_PCT : DISKON_VOUCHER_NON_MEMBER_PCT;
@@ -379,24 +422,26 @@ function hitungTotal() {
         document.getElementById('row-voucher-discount').className = 'text-success';
     } else {
         document.getElementById('row-voucher-discount').className = 'd-none';
-    }
+    } */
     
     // 5. Total Setelah Diskon Sebelum Pajak
-    let totalAfterDiscount = subtotal - diskonMemberNominal - diskonVoucherNominal;
+    // let totalAfterDiscount = subtotal - diskonMemberNominal - diskonVoucherNominal;
+    let totalAfterDiscount = subtotal - diskonMemberNominal;
     if (totalAfterDiscount < 0) totalAfterDiscount = 0; // pencegahan mines
     
     // 6. Hitung Pajak (Berdasarkan Subtotal)
     // "Pajak default 10% dari subtotal transaksi" 
     // Rumus Pajak umumnya dikenakan pada subtotal tanpa diskon. Kalau pakai diskon, ya subtotal.
-    const taxNominal = (subtotal * PAJAK_PCT) / 100;
+    /* const taxNominal = (subtotal * PAJAK_PCT) / 100; */
+    const taxNominal = 0;
     
     // 7. Grand Total
     const grandTotal = totalAfterDiscount + taxNominal;
 
     document.getElementById('label-subtotal').textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
-    document.getElementById('label-member-discount').textContent = '-Rp ' + diskonMemberNominal.toLocaleString('id-ID');
-    document.getElementById('label-voucher-discount').textContent = '-Rp ' + diskonVoucherNominal.toLocaleString('id-ID');
-    document.getElementById('label-tax').textContent = 'Rp ' + taxNominal.toLocaleString('id-ID');
+    // document.getElementById('label-member-discount').textContent = '-Rp ' + diskonMemberNominal.toLocaleString('id-ID');
+    // document.getElementById('label-voucher-discount').textContent = '-Rp ' + diskonVoucherNominal.toLocaleString('id-ID');
+    // document.getElementById('label-tax').textContent = 'Rp ' + taxNominal.toLocaleString('id-ID');
     document.getElementById('label-total').textContent = 'Rp ' + grandTotal.toLocaleString('id-ID');
 }
 </script>

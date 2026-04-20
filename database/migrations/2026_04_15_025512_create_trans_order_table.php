@@ -24,15 +24,19 @@ return new class extends Migration
             $table->integer('order_pay')->nullable();
             $table->integer('order_change')->nullable();
             $table->integer('total')->nullable();
+            /*
             $table->integer('pajak_persen')->nullable()->default(0); 
             $table->integer('pajak_nominal')->nullable()->default(0);
+            */
             
             $table->integer('member_discount_persen')->nullable()->default(0);
             $table->integer('member_discount_nominal')->nullable()->default(0);
             
+            /*
             $table->string('voucher_code', 50)->nullable();
             $table->integer('voucher_discount_persen')->nullable()->default(0);
             $table->integer('voucher_discount_nominal')->nullable()->default(0);
+            */
 
             $table->foreign('id_customer')->references('id')->on('customers');
         });

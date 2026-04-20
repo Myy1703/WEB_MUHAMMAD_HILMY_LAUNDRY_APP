@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /*
         Schema::create('vouchers', function (Blueprint $table) {
             $table->id();
             $table->string('voucher_code', 50)->unique();
@@ -19,6 +20,7 @@ return new class extends Migration
             $table->date('valid_until');
             $table->timestamps();
         });
+        */
     }
 
     /**
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vouchers');
+        /* Schema::dropIfExists('vouchers'); */
     }
 };

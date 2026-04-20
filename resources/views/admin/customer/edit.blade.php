@@ -38,10 +38,12 @@
                     class="form-control">{{ old('address', $customer->address) }}</textarea>
             </div>
 
+            {{-- 
             <div class="mb-3 form-check">
                 <input type="checkbox" name="is_member" class="form-check-input" id="is_member" {{ $customer->is_member ? 'checked' : '' }}>
                 <label class="form-check-label fw-bold" for="is_member">Jadikan Member Pribadi (Diskon {{ env('DISKON_MEMBER', 5) }}%)</label>
             </div>
+            --}}
 
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-warning">

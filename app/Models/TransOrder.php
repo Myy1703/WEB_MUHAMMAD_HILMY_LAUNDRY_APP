@@ -11,9 +11,9 @@ class TransOrder extends Model
     protected $fillable = [
         'id_customer', 'order_code', 'order_date', 'order_end_date',
         'order_status', 'order_pay', 'order_change', 'total',
-        'pajak_persen', 'pajak_nominal',
+        /* 'pajak_persen', 'pajak_nominal', */
         'member_discount_persen', 'member_discount_nominal',
-        'voucher_code', 'voucher_discount_persen', 'voucher_discount_nominal'
+        /* 'voucher_code', 'voucher_discount_persen', 'voucher_discount_nominal' */
     ];
 
     // Relasi: order milik satu customer

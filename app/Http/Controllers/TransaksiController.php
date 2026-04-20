@@ -18,6 +18,8 @@ class TransaksiController extends Controller
 
     public function create()
     {
+        // $customers = Customer::where('is_member', 1)->get();
+        // Berubah: memanggil semua customer tanpa pengecekan is_member
         $customers = Customer::all();
         $services = TypeOfService::all();
         return view('operator.transaksi.create', compact('customers', 'services'));
@@ -30,9 +32,11 @@ class TransaksiController extends Controller
             'order_date' => 'required|date',
             'order_end_date' => 'required|date',
             'services' => 'required|array|min:1',
-            'tipe_customer' => 'required|in:terdaftar,baru',
+            // 'tipe_customer' => 'required|in:terdaftar,baru',
+            // 'id_customer' => 'required|exists:customers,id', // Langsung wajib pilih karena fitur non-member dihilangkan di create
         ];
 
+        /* KODE DIMATIKAN
         if ($request->tipe_customer == 'terdaftar') {
             $rules['id_customer'] = 'required|exists:customers,id';
         } else {
@@ -40,12 +44,32 @@ class TransaksiController extends Controller
             $rules['phone'] = 'required|string|max:13';
             $rules['address'] = 'required|string';
         }
+        */
+
+        // ===== SINTAKS BARU PENGGANTI TIPE CUSTOMER MEMBER/NON MEMBER ======
+        // (Beri tanda ini agar mudah dikembalikan ke sistem member. Disini kita wajibkan input form manual saja.)
+        // $rules['tipe_customer'] = 'required|in:terdaftar,baru';
+        $rules['customer_name'] = 'required|string|max:50';
+        $rules['phone'] = 'required|string|max:13';
+        $rules['address'] = 'required|string';
+        // ===================================================================
+
+        /*
+        if ($request->tipe_customer == 'terdaftar') {
+            $rules['id_customer'] = 'required|exists:customers,id';
+        } else {
+            $rules['customer_name'] = 'required|string|max:50';
+            $rules['phone'] = 'required|string|max:13';
+            $rules['address'] = 'required|string';
+        }
+        */
         $request->validate($rules);
 
         // Manage Customer ID
-        $id_customer = $request->id_customer;
-        $isMember = false;
+        // $id_customer = $request->id_customer;
+        // $isMember = false;
 
+        /* KODE DIMATIKAN
         if ($request->tipe_customer == 'baru') {
             $customerBaru = Customer::create([
                 'customer_name' => $request->customer_name,
@@ -58,6 +82,17 @@ class TransaksiController extends Controller
             $customerLama = Customer::findOrFail($id_customer);
             $isMember = $customerLama->is_member;
         }
+        */
+
+        // ===== SINTAKS BARU BUAT CUSTOMER ======
+        // (Beri tanda ini agar mudah dikembalikan. Selalu create data manual dari form.)
+        $customerBaru = Customer::create([
+            'customer_name' => $request->customer_name,
+            'phone' => $request->phone,
+            'address' => $request->address,
+        ]);
+        $id_customer = $customerBaru->id;
+        // =======================================
 
         // Generate kode order
         $orderCode = 'ORD-' . date('Ymd') . '-' . str_pad(TransOrder::count() + 1, 4, '0', STR_PAD_LEFT);
@@ -72,15 +107,19 @@ class TransaksiController extends Controller
         }
 
         // Diskon Member
+        /*
         $memberDiscountPersen = 0;
         $memberDiscountNominal = 0;
         if ($isMember) {
             $memberDiscountPersen = env('DISKON_MEMBER', 5);
             $memberDiscountNominal = ($subtotal * $memberDiscountPersen) / 100;
         }
+        */
+        $memberDiscountPersen = 0;
+        $memberDiscountNominal = 0;
 
         // Diskon Voucher
-        $voucherCode = $request->voucher_code;
+        /* $voucherCode = $request->voucher_code;
         $voucherDiscountPersen = 0;
         $voucherDiscountNominal = 0;
 
@@ -92,14 +131,20 @@ class TransaksiController extends Controller
             } else {
                 $voucherCode = null;
             }
-        }
+        } */
+        $voucherCode = null;
+        $voucherDiscountPersen = 0;
+        $voucherDiscountNominal = 0;
 
-        $totalAfterDiscount = $subtotal - $memberDiscountNominal - $voucherDiscountNominal;
+        // $totalAfterDiscount = $subtotal - $memberDiscountNominal - $voucherDiscountNominal;
+        $totalAfterDiscount = $subtotal - $memberDiscountNominal;
         if ($totalAfterDiscount < 0) $totalAfterDiscount = 0;
 
         // Hitung Pajak dari subtotal
-        $taxRate = env('PAJAK_LAUNDRY', 10); 
-        $taxNominal = ($subtotal * $taxRate) / 100;
+        // $taxRate = env('PAJAK_LAUNDRY', 10); 
+        // $taxNominal = ($subtotal * $taxRate) / 100;
+        $taxRate = 0;
+        $taxNominal = 0;
         
         $grandTotal = $totalAfterDiscount + $taxNominal;
 

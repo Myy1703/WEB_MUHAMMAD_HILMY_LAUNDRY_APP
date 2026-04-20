@@ -27,7 +27,7 @@ class CustomerController extends Controller
         ]);
 
         $data = $request->only('customer_name', 'phone', 'address');
-        $data['is_member'] = $request->has('is_member') ? 1 : 0;
+        // $data['is_member'] = $request->has('is_member') ? 1 : 0;
 
         Customer::create($data);
         return redirect('/admin/customer')->with('success', 'Customer berhasil ditambahkan');
@@ -50,7 +50,7 @@ class CustomerController extends Controller
         $customer = Customer::findOrFail($id);
         
         $data = $request->only('customer_name', 'phone', 'address');
-        $data['is_member'] = $request->has('is_member') ? 1 : 0;
+        // $data['is_member'] = $request->has('is_member') ? 1 : 0;
         
         $customer->update($data);
         return redirect('/admin/customer')->with('success', 'Customer berhasil diupdate');

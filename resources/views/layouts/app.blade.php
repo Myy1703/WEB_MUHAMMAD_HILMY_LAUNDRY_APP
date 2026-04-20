@@ -68,7 +68,7 @@
                 <a href="/admin/customer"><i class="bi bi-people me-2"></i>Customer</a>
                 <a href="/admin/user"><i class="bi bi-person-gear me-2"></i>User</a>
                 <a href="/admin/service"><i class="bi bi-tags me-2"></i>Jenis Service</a>
-                <a href="/admin/voucher"><i class="bi bi-ticket-perforated me-2"></i>Voucher Diskon</a>
+                {{-- <a href="/admin/voucher"><i class="bi bi-ticket-perforated me-2"></i>Voucher Diskon</a> --}}
                 <div class="menu-title">Transaksi</div>
                 <a href="/operator/transaksi"><i class="bi bi-cart-plus me-2"></i>Transaksi</a>
                 <a href="/operator/pickup"><i class="bi bi-bag-check me-2"></i>Pickup</a>
