@@ -250,7 +250,7 @@ Buka browser dan akses: **http://localhost:8000**
 > ![Laporan Pimpinan](screenshots/pimpinan-dashboard.png)
 >
 > ### Form Transaksi Baru
-> ![Transaksi Baru](screenshots/transaksi-baru.png)
+> ![Transaksi Baru](screenshots/transaksi-baru-v2.png)
 
 ---
 
