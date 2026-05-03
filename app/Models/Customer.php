@@ -8,7 +8,7 @@ class Customer extends Model
     use SoftDeletes;
 
     protected $table = 'customers';
-    protected $fillable = ['customer_name', 'phone', 'address' /*, 'is_member'*/];
+    protected $fillable = ['customer_name', 'phone', 'address'];
 
     // Relasi: satu customer bisa punya banyak order
     public function orders()

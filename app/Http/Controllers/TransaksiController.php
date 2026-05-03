@@ -10,170 +10,78 @@ use App\Models\TypeOfService;
 
 class TransaksiController extends Controller
 {
+    /**
+     * Menampilkan daftar semua transaksi.
+     */
     public function index()
     {
         $orders = TransOrder::with('customer', 'details')->orderBy('id', 'desc')->get();
         return view('operator.transaksi.index', compact('orders'));
     }
 
+    /**
+     * Menampilkan form buat transaksi baru.
+     */
     public function create()
     {
-        // $customers = Customer::where('is_member', 1)->get();
-        // Berubah: memanggil semua customer tanpa pengecekan is_member
         $customers = Customer::all();
         $services = TypeOfService::all();
         return view('operator.transaksi.create', compact('customers', 'services'));
     }
 
+    /**
+     * Menyimpan transaksi baru ke database.
+     */
     public function store(Request $request)
     {
-        // Validasi conditional
-        $rules = [
-            'order_date' => 'required|date',
+        $request->validate([
+            'order_date'     => 'required|date',
             'order_end_date' => 'required|date',
-            'services' => 'required|array|min:1',
-            // 'tipe_customer' => 'required|in:terdaftar,baru',
-            // 'id_customer' => 'required|exists:customers,id', // Langsung wajib pilih karena fitur non-member dihilangkan di create
-        ];
-
-        /* KODE DIMATIKAN
-        if ($request->tipe_customer == 'terdaftar') {
-            $rules['id_customer'] = 'required|exists:customers,id';
-        } else {
-            $rules['customer_name'] = 'required|string|max:50';
-            $rules['phone'] = 'required|string|max:13';
-            $rules['address'] = 'required|string';
-        }
-        */
-
-        // ===== SINTAKS BARU PENGGANTI TIPE CUSTOMER MEMBER/NON MEMBER ======
-        // (Beri tanda ini agar mudah dikembalikan ke sistem member. Disini kita wajibkan input form manual saja.)
-        // $rules['tipe_customer'] = 'required|in:terdaftar,baru';
-        $rules['customer_name'] = 'required|string|max:50';
-        $rules['phone'] = 'required|string|max:13';
-        $rules['address'] = 'required|string';
-        // ===================================================================
-
-        /*
-        if ($request->tipe_customer == 'terdaftar') {
-            $rules['id_customer'] = 'required|exists:customers,id';
-        } else {
-            $rules['customer_name'] = 'required|string|max:50';
-            $rules['phone'] = 'required|string|max:13';
-            $rules['address'] = 'required|string';
-        }
-        */
-        $request->validate($rules);
-
-        // Manage Customer ID
-        // $id_customer = $request->id_customer;
-        // $isMember = false;
-
-        /* KODE DIMATIKAN
-        if ($request->tipe_customer == 'baru') {
-            $customerBaru = Customer::create([
-                'customer_name' => $request->customer_name,
-                'phone' => $request->phone,
-                'address' => $request->address,
-                'is_member' => 0
-            ]);
-            $id_customer = $customerBaru->id;
-        } else {
-            $customerLama = Customer::findOrFail($id_customer);
-            $isMember = $customerLama->is_member;
-        }
-        */
-
-        // ===== SINTAKS BARU BUAT CUSTOMER ======
-        // (Beri tanda ini agar mudah dikembalikan. Selalu create data manual dari form.)
-        $customerBaru = Customer::create([
-            'customer_name' => $request->customer_name,
-            'phone' => $request->phone,
-            'address' => $request->address,
+            'services'       => 'required|array|min:1',
+            'customer_name'  => 'required|string|max:50',
+            'phone'          => 'required|string|max:13',
+            'address'        => 'required|string',
         ]);
-        $id_customer = $customerBaru->id;
-        // =======================================
 
-        // Generate kode order
+        // Buat data customer baru dari input form
+        $customer = Customer::create([
+            'customer_name' => $request->customer_name,
+            'phone'         => $request->phone,
+            'address'       => $request->address,
+        ]);
+
+        // Generate kode order unik
         $orderCode = 'ORD-' . date('Ymd') . '-' . str_pad(TransOrder::count() + 1, 4, '0', STR_PAD_LEFT);
 
-        // Hitung total
-        $subtotal = 0;
+        // Hitung total harga dari semua layanan yang dipilih
+        $total = 0;
         foreach ($request->services as $item) {
             $service = TypeOfService::find($item['id_service']);
             if ($service) {
-                $subtotal += $service->price * ($item['qty'] ?? 1);
+                $total += $service->price * ($item['qty'] ?? 1);
             }
         }
 
-        // Diskon Member
-        /*
-        $memberDiscountPersen = 0;
-        $memberDiscountNominal = 0;
-        if ($isMember) {
-            $memberDiscountPersen = env('DISKON_MEMBER', 5);
-            $memberDiscountNominal = ($subtotal * $memberDiscountPersen) / 100;
-        }
-        */
-        $memberDiscountPersen = 0;
-        $memberDiscountNominal = 0;
-
-        // Diskon Voucher
-        /* $voucherCode = $request->voucher_code;
-        $voucherDiscountPersen = 0;
-        $voucherDiscountNominal = 0;
-
-        if ($voucherCode) {
-            $voucher = \App\Models\Voucher::where('voucher_code', $voucherCode)->where('is_active', 1)->first();
-            if ($voucher && strtotime($voucher->valid_until) >= strtotime(date('Y-m-d'))) {
-                $voucherDiscountPersen = $isMember ? env('DISKON_VOUCHER_MEMBER', 15) : env('DISKON_VOUCHER_NON_MEMBER', 10);
-                $voucherDiscountNominal = ($subtotal * $voucherDiscountPersen) / 100;
-            } else {
-                $voucherCode = null;
-            }
-        } */
-        $voucherCode = null;
-        $voucherDiscountPersen = 0;
-        $voucherDiscountNominal = 0;
-
-        // $totalAfterDiscount = $subtotal - $memberDiscountNominal - $voucherDiscountNominal;
-        $totalAfterDiscount = $subtotal - $memberDiscountNominal;
-        if ($totalAfterDiscount < 0) $totalAfterDiscount = 0;
-
-        // Hitung Pajak dari subtotal
-        // $taxRate = env('PAJAK_LAUNDRY', 10); 
-        // $taxNominal = ($subtotal * $taxRate) / 100;
-        $taxRate = 0;
-        $taxNominal = 0;
-        
-        $grandTotal = $totalAfterDiscount + $taxNominal;
-
+        // Simpan order utama
         $order = TransOrder::create([
-            'id_customer' => $id_customer,
-            'order_code' => $orderCode,
-            'order_date' => $request->order_date,
+            'id_customer'    => $customer->id,
+            'order_code'     => $orderCode,
+            'order_date'     => $request->order_date,
             'order_end_date' => $request->order_end_date,
-            'order_status' => 0,
-            'total' => $grandTotal,
-            'pajak_persen' => $taxRate,
-            'pajak_nominal' => $taxNominal,
-            'member_discount_persen' => $memberDiscountPersen,
-            'member_discount_nominal' => $memberDiscountNominal,
-            'voucher_code' => $voucherCode,
-            'voucher_discount_persen' => $voucherDiscountPersen,
-            'voucher_discount_nominal' => $voucherDiscountNominal,
+            'order_status'   => 0,
+            'total'          => $total,
         ]);
 
-        // Simpan detail
+        // Simpan detail layanan per item
         foreach ($request->services as $item) {
             $service = TypeOfService::find($item['id_service']);
             if ($service) {
                 TransOrderDetail::create([
-                    'id_order' => $order->id,
+                    'id_order'   => $order->id,
                     'id_service' => $item['id_service'],
-                    'qty' => $item['qty'] ?? 1,
-                    'subtotal' => $service->price * ($item['qty'] ?? 1),
-                    'notes' => $item['notes'] ?? null,
+                    'qty'        => $item['qty'] ?? 1,
+                    'subtotal'   => $service->price * ($item['qty'] ?? 1),
+                    'notes'      => $item['notes'] ?? null,
                 ]);
             }
         }
@@ -181,6 +89,9 @@ class TransaksiController extends Controller
         return redirect('/operator/transaksi')->with('success', 'Transaksi berhasil disimpan');
     }
 
+    /**
+     * Menampilkan detail satu transaksi.
+     */
     public function show($id)
     {
         $order = TransOrder::with('customer', 'details.service')->findOrFail($id);
