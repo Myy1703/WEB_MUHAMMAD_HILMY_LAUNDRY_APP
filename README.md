@@ -235,18 +235,22 @@ Buka browser dan akses: **http://localhost:8000**
 
 ## 📸 Screenshots
 
-> **Tambahkan screenshot aplikasi kamu di sini untuk membuat repo lebih menarik!**
+> Berikut adalah tampilan aplikasi Laundry Management System:
 >
-> Cara menambahkan:
-> 1. Buat folder `screenshots/` di root project
-> 2. Simpan screenshot dengan nama deskriptif (contoh: `login.png`, `dashboard-admin.png`)
-> 3. Tambahkan di bawah ini:
->
-> ```markdown
+> ### Halaman Login
 > ![Login Page](screenshots/login.png)
-> ![Admin Dashboard](screenshots/dashboard-admin.png)
-> ![Transaksi Baru](screenshots/transaksi-create.png)
-> ```
+> 
+> ### Dashboard Admin
+> ![Admin Dashboard](screenshots/admin-dashboard.png)
+> 
+> ### Dashboard Operator
+> ![Operator Dashboard](screenshots/operator-dashboard.png)
+>
+> ### Laporan Pimpinan
+> ![Laporan Pimpinan](screenshots/pimpinan-dashboard.png)
+>
+> ### Form Transaksi Baru
+> ![Transaksi Baru](screenshots/transaksi-baru.png)
 
 ---
 
